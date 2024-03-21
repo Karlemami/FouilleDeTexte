@@ -13,3 +13,9 @@ Il ne contient que 3 genres (pop, rock et hip hop)
 
 ##
 On a trouvé un autre corpus <a href="https://huggingface.co/datasets/sebastiandizon/genius-song-lyrics">ici</a>, plus grand, qui contient 2,6 millions de chansons réparties en 6 genres. Une fois qu'on aura construit nos modèles, on pourra peut-être l'utiliser.
+
+## Comment faire les maths?
+On cherche la probablité de la classe selon le document pour toutes les classes, i.e. quelle classe est la plus probable pour le document.
+P(C|d) = P(d|C) x P (C) où
+P(d|C) = (nbr de docs dans C contenant x) / nbr de docs dans C
+P(C) = nbr de docs dans la classe C / nbr de docs
