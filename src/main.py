@@ -10,6 +10,7 @@ def load_csv(file_path: str):
     
     with open(file_path, 'r') as file:
         reader = csv.reader(file,delimiter='|')
+        next(reader)
         for row in reader:
             classes.append(row[0])
             lyrics.append(row[1])
