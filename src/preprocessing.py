@@ -38,13 +38,13 @@ def main():
     
     df = pd.read_csv(args.corpus,sep="|",header=None)
     df.columns = ["Genre","Lyrics"]
-    
+
     if "lemmatizer" in args.processes:
         l = Lemmatizer()
-        df["Lyrics"] = df["Lyrics"].apply(Lemmatizer.lemmatize())
+        df["Lyrics"] = df["Lyrics"].apply(l.lemmatize)
     if "stemmer" in args.processes:
         s = Stemmer()
-        df["Lyrics"] = df["Lyrics"].apply(Stemmer.stem())
+        df["Lyrics"] = df["Lyrics"].apply(s.stem)
     
     df.to_csv(args.output_file,index=False,sep="|")
     
