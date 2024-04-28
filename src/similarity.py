@@ -39,8 +39,19 @@ def main():
     for genre1 in genre_matrices:
         for genre2 in genre_matrices: # On fait les calculs pour chaque paire de genre
             if genre1 != genre2:
-                similarity = get_cosine_similarity(genre_matrices[genre1], genre_matrices[genre2])
-                concat = pd.concat([genre_matrices[genre1], genre_matrices[genre2]]) 
+                size_genre1 = len(genre_matrices[genre1])
+                size_genre2 = len(genre_matrices[genre2])
+                if size_genre1 > size_genre2:
+                    m1 = genre_matrices[genre1].sample(size_genre2)
+                    m2 = genre_matrices[genre2]
+                elif size_genre2 > size_genre1:
+                    m1 = genre_matrices[genre1]
+                    m2 = genre_matrices[genre2].sample(size_genre1)
+                else:
+                    m1 = genre_matrices[genre1]
+                    m2 = genre_matrices[genre2]
+                similarity = get_cosine_similarity(m1,m2)
+                concat = pd.concat([m1,m2])
                 lyrics = list(concat["Lyrics"])
                 classes = list(concat["Genre"])
                 matrix = vectorize(lyrics)
