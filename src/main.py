@@ -1,21 +1,16 @@
 from classifiers import *
 import csv
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
 import matplotlib.pyplot as plt
+import pandas as pd
 
 def load_csv(file_path: str):
-    classes = []
-    lyrics = []
+    df = pd.read_csv(file_path,sep="|")
+    lyrics = list(df["Lyrics"])
+    genre = list(df["Genre"])
+    return lyrics, genre
     
-    with open(file_path, 'r') as file:
-        reader = csv.reader(file,delimiter='|')
-        next(reader)
-        for row in reader:
-            classes.append(row[0])
-            lyrics.append(row[1])
-    
-    return lyrics, classes
 
 def vectorize(sentences: list[str]):
     vectorizer = TfidfVectorizer()
@@ -23,8 +18,9 @@ def vectorize(sentences: list[str]):
     return matrix
 
 def generate_confusion_matrix(prediction, classes):
-    cm = confusion_matrix(classes, prediction)
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['Pop', 'Rock', 'Hip-Hop'])
+    labels = sorted(list(set(classes)))
+    cm = confusion_matrix(classes, prediction, labels=labels)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
     disp.plot()
     plt.show()
 
@@ -36,8 +32,9 @@ def main():
     lyrics, classes = load_csv(args.file_path)
     matrix = vectorize(lyrics)
     
-    nb_predictions = svm(matrix, classes)
-    generate_confusion_matrix(nb_predictions, classes)
+    predictions = random_forest(matrix, classes)
+    generate_confusion_matrix(predictions, classes)
+    print(classification_report(predictions,classes))
     
 if __name__ == '__main__':
     main()
