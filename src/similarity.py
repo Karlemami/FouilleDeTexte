@@ -18,7 +18,7 @@ def split_corpus_into_genres_matrices(input_file: str) -> dict:
     return genre_dataframes
 
 
-def get_cosine_similarity(df1, df2) -> float:
+def get_cosine_similarity(df1: pd.DataFrame, df2: pd.DataFrame) -> float:
     """Calcule la similarité cosinus entre deux genres. On récupère les lyrics en deux strings, un par genre, car on veut la similarité
     globale du corpus, et pas les similarités chanson par chanson."""
     s1 = " ".join(list(df1["Lyrics"]))
