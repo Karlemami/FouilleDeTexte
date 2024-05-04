@@ -7,10 +7,16 @@ import pandas as pd
 
 def load_csv(file_path: str):
     df = pd.read_csv(file_path,sep="|")
+    df = balance_class_members(df)
     lyrics = list(df["Lyrics"])
     genre = list(df["Genre"])
     return lyrics, genre
     
+def balance_class_members(df: pd.DataFrame) -> pd.DataFrame:
+    min_class_size = df['Genre'].value_counts().min()
+    balanced_df = df.groupby('Genre').apply(lambda x: x.sample(min_class_size))
+    balanced_df.reset_index(drop=True, inplace=True)
+    return balanced_df
 
 def vectorize(sentences: list[str]):
     vectorizer = TfidfVectorizer()
@@ -33,8 +39,9 @@ def main():
     matrix = vectorize(lyrics)
     
     predictions = random_forest(matrix, classes)
+    print(classification_report(classes,predictions))
     generate_confusion_matrix(predictions, classes)
-    print(classification_report(predictions,classes))
+    
     
 if __name__ == '__main__':
     main()
